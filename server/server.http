@@ -1,0 +1,28 @@
+### login 1
+
+POST http://localhost:3001/api/sessions/
+Content-Type: application/json
+
+{"username": "prophet", "password": "password"}
+
+### login 2
+
+POST http://localhost:3001/api/sessions/
+Content-Type: application/json
+
+{"username": "therealmusk", "password": "1234abcd"}
+
+### login 3
+
+POST http://localhost:3001/api/sessions/
+Content-Type: application/json
+
+{"username": "Manager", "password": "password"}
+
+### logout
+
+DELETE  http://localhost:3001/api/sessions/current
+
+###check login
+
+GET http://localhost:3001/api/sessions/current/
