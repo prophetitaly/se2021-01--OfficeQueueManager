@@ -5,6 +5,7 @@ const morgan = require("morgan");
 const { check, query, validationResult } = require("express-validator");
 const path = require("path");
 
+const officeDao = require("./officeDao");
 const passport = require('passport'); // auth middleware
 const LocalStrategy = require('passport-local').Strategy; // username and password for login
 const session = require('express-session'); // enable sessions
@@ -69,8 +70,81 @@ app.use(passport.session());
 
 /*** APIs ***/
 
+Array.prototype.unique = function() {
+  var a = this.concat();
+  for(var i=0; i<a.length; ++i) {
+      for(var j=i+1; j<a.length; ++j) {
+          if(a[i] === a[j])
+              a.splice(j--, 1);
+      }
+  }
 
+  return a;
+};
 
+// GET services
+app.get('/api/services', async (req, res) => {
+  try {
+    const result = await officeDao.getServices();
+    if (result.err)
+      res.status(404).json(result);
+    else {
+      const list = [];
+      result.forEach(async (r) => {
+        const s = await JSON.parse(r.services);
+        if(s != null) list.push(...s);
+      });
+      const uniqueList = await list;
+      res.json(uniqueList.unique());
+    }
+  } catch (err) {
+    res.status(500).end();
+  }
+});
+
+// GET next ticket number
+app.get('/api/ticket', async (req, res) => {
+  try {
+    const result = await officeDao.getNextNumber();
+    if (result.err)
+      res.status(404).json(result);
+    else
+      res.json(result);
+  } catch (err) {
+    res.status(500).end();
+  }
+});
+
+// POST /api/ticket/
+//new ticket
+app.post('/api/ticket/', [
+  check('service').isString()
+], isLoggedIn, async (req, res) => {
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+  }
+
+  const ticket = req.body;
+
+  try {
+    ticket.number = await officeDao.getNextNumber();
+    if (ticket.number.err)
+      res.status(404).json(result);
+    else {
+      const result = await officeDao.addTicket(ticket);
+      if (result.err)
+        res.status(404).json(result);
+      else
+        res.json(result);
+    }
+  } catch (err) {
+    res.status(500).json({ error: `${err}.` });
+    return;
+  }
+
+});
 
 /*** User APIs ***/
 

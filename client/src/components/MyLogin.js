@@ -51,6 +51,7 @@ function MyLogin(props) {
                             //props.setUser(() => response);
                             //props.setLoggedIn(() => true);
                             //props.setFirstLogin(() => true);
+                            props.setUser(()=>username);
                             history.push("/" + username);
                         }
                     });

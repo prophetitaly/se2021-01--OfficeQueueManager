@@ -1,5 +1,29 @@
 const URL = "http://localhost:3000"
 
+async function loadServices() {
+    let myURL = URL + "/api/services";
+    const response = await fetch(myURL);
+    if (response.ok) {
+        const fetchedImages = await response.json();
+        return fetchedImages;
+    } else return { 'error': 'Failed to load services from server' }
+}
+
+async function addTicket(ticket) {
+    const response = await fetch(URL + "/api/ticket/",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(ticket),
+        });
+    if (response.ok) {
+        const ticketNumber = await response.json();
+        return ticketNumber;
+    } else return { 'error': 'Failed to store data on server' }
+}
+
 async function login(user) {
     const response = await fetch(URL + "/api/sessions/",
         {
@@ -35,5 +59,5 @@ async function isLoggedIn() {
     }
 }
 
-const API = { login, logout, isLoggedIn };
+const API = { loadServices, addTicket, login, logout, isLoggedIn };
 export default API;

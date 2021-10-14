@@ -1,8 +1,26 @@
 import MyHomepage from "./MyHomepage";
 import { Route, Switch } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import MyLogin from "./MyLogin";
+import MyTotem from "./MyTotem";
+import API from "./API";
 
 function MyContainer(props) {
+
+    const [user, setUser] = useState([]);
+
+    useEffect(() => {
+        API.isLoggedIn().then((response) => {
+          if (response.error === undefined) {
+            setUser(() => response);
+          }
+          else{
+            setUser(()=>undefined);
+          }
+        }).catch(err => {
+          console.log(err);
+        });
+      }, []);
 
     return (
         <>
@@ -23,7 +41,7 @@ function MyContainer(props) {
                     render={() => {
                         return (
                             <>
-                                
+
                             </>
                         )
                     }}>
@@ -33,17 +51,27 @@ function MyContainer(props) {
                     render={() => {
                         return (
                             <>
-                                <MyLogin/>
+                                <MyLogin setUser={setUser} />
                             </>
                         )
                     }}>
                 </Route>
                 <Route
-                    path="/Counter"
+                    path="/counter"
                     render={() => {
                         return (
                             <>
-                                
+
+                            </>
+                        )
+                    }}>
+                </Route>
+                <Route
+                    path="/totem"
+                    render={() => {
+                        return (
+                            <>
+                                <MyTotem user={user}/>
                             </>
                         )
                     }}>

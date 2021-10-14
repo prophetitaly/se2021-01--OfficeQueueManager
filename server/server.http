@@ -1,18 +1,4 @@
-### login 1
-
-POST http://localhost:3001/api/sessions/
-Content-Type: application/json
-
-{"username": "prophet", "password": "password"}
-
-### login 2
-
-POST http://localhost:3001/api/sessions/
-Content-Type: application/json
-
-{"username": "therealmusk", "password": "1234abcd"}
-
-### login 3
+### login
 
 POST http://localhost:3001/api/sessions/
 Content-Type: application/json
@@ -26,3 +12,18 @@ DELETE  http://localhost:3001/api/sessions/current
 ###check login
 
 GET http://localhost:3001/api/sessions/current/
+
+###get ticket number
+
+GET http://localhost:3001/api/ticket/
+
+### insert ticket
+
+POST http://localhost:3001/api/ticket/
+Content-Type: application/json
+
+{"service": "payment"}
+
+###get services
+
+GET http://localhost:3001/api/services/
