@@ -3,7 +3,7 @@
 POST http://localhost:3001/api/sessions/
 Content-Type: application/json
 
-{"username": "Manager", "password": "password"}
+{"username": "totem", "password": "totem"}
 
 ### logout
 
@@ -26,4 +26,4 @@ Content-Type: application/json
 
 ###get services
 
-GET http://localhost:3001/api/services/
+GET http://localhost:3001/api/services/all
