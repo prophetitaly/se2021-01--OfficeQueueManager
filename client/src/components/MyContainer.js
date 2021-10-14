@@ -1,6 +1,7 @@
 import MyHomepage from "./MyHomepage";
 import { Route, Switch } from "react-router-dom";
 import MyLogin from "./MyLogin";
+import MyManager from "./MyManager"
 
 function MyContainer(props) {
 
@@ -44,6 +45,16 @@ function MyContainer(props) {
                         return (
                             <>
                                 
+                            </>
+                        )
+                    }}>
+                </Route>
+                <Route
+                    path="/manager"
+                    render={() => {
+                        return (
+                            <>
+                               <MyManager/>
                             </>
                         )
                     }}>
