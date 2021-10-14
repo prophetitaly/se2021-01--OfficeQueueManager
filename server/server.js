@@ -10,6 +10,8 @@ const passport = require('passport'); // auth middleware
 const LocalStrategy = require('passport-local').Strategy; // username and password for login
 const session = require('express-session'); // enable sessions
 const userDao = require('./userDao'); // module for accessing the users in the DB
+const dao = require('./db'); // module for accessing the users in the DB
+
 
 /*** Set up Passport ***/
 // set up the "username and password" login strategy
@@ -191,4 +193,46 @@ app.get('/api/sessions/current', (req, res) => {
 // activate the server
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
+});
+
+// GET counter informations
+app.get('/api/counters', async (req, res) => {
+  try {
+      const counters = await dao.getCounterInfo();
+      if (counters.error) {
+          res.status(404).json(counters);}
+      else{
+          res.json(counters);
+      }
+      /*
+      } else if(counters.username == req.user.id){
+          res.json(counters);
+      } else {
+          res.status(401).send("Not authorized");
+      }*/
+  } catch (err) {
+      res.status(500).end();
+  }
+});
+
+
+// GET services
+app.get('/api/services', async (req, res) => {
+  try {
+      const service = await dao.getServices();
+      if (service.error) {
+          res.status(404).json(service);}
+      else{
+          res.json(service);
+      }
+      /*
+      } else if(counters.username == req.user.id){
+          res.json(counters);
+      } else {
+          res.status(401).send("Not authorized");
+      }*/
+  } catch (err) {
+    console.log(err)
+      res.status(500).end();
+  }
 });
