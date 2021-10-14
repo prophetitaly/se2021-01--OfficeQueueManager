@@ -27,3 +27,17 @@ exports.getCounterInfo = () => {
 
 
 
+// get all counters
+exports.getServices = () => {
+  return new Promise((resolve, reject) => { 
+    const sql = 'SELECT * FROM services';
+    db.all(sql ,(err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      const tasks = rows.map((t) => ({ service: t.service, extimatedTime: t.extimatedTime }));
+      resolve(tasks);
+    });
+  });
+};
