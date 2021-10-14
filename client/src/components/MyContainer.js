@@ -2,12 +2,9 @@ import MyHomepage from "./MyHomepage";
 import { Route, Switch } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import MyLogin from "./MyLogin";
-<<<<<<< HEAD
 import MyTotem from "./MyTotem";
 import API from "./API";
-=======
 import MyManager from "./MyManager"
->>>>>>> 220c023beb2e76bea1f59888585b778071a59565
 
 function MyContainer(props) {
 

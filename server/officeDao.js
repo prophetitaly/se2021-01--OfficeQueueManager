@@ -4,7 +4,7 @@ const dayjs = require('dayjs');
 const db = require('./db');
 
 //get services
-exports.getServices = async () => {
+exports.getServicesAll = async () => {
     return new Promise((resolve, reject) => {
         const sql = 'SELECT services FROM management';
         db.all(sql, [], function (err, rows) {
@@ -59,3 +59,36 @@ exports.addTicket = async (ticket) => {
         return;
     }
 };
+
+// get all counters
+exports.getCounterInfo = () => {
+    return new Promise((resolve, reject) => {
+      
+      const sql = 'SELECT * FROM management WHERE services!=?';
+      db.all(sql, ["null"] ,(err, rows) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        const tasks = rows.map((t) => ({ id: t.id, username: t.username, services: t.services }));
+        resolve(tasks);
+      });
+    });
+  };
+  
+  
+  
+  // get all counters for a counter
+  exports.getServices = () => {
+    return new Promise((resolve, reject) => { 
+      const sql = 'SELECT * FROM services';
+      db.all(sql ,(err, rows) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        const tasks = rows.map((t) => ({ service: t.service, extimatedTime: t.extimatedTime }));
+        resolve(tasks);
+      });
+    });
+  };

@@ -85,9 +85,9 @@ Array.prototype.unique = function() {
 };
 
 // GET services
-app.get('/api/services', async (req, res) => {
+app.get('/api/services/all', async (req, res) => {
   try {
-    const result = await officeDao.getServices();
+    const result = await officeDao.getServicesAll();  
     if (result.err)
       res.status(404).json(result);
     else {
@@ -150,6 +150,48 @@ app.post('/api/ticket/', [
 
 /*** User APIs ***/
 
+// GET counter informations
+app.get('/api/counters', async (req, res) => {
+  try {
+      const counters = await officeDao.getCounterInfo();
+      if (counters.error) {
+          res.status(404).json(counters);}
+      else{
+          res.json(counters);
+      }
+      /*
+      } else if(counters.username == req.user.id){
+          res.json(counters);
+      } else {
+          res.status(401).send("Not authorized");
+      }*/
+  } catch (err) {
+      res.status(500).end();
+  }
+});
+
+
+// GET services
+app.get('/api/services', async (req, res) => {
+  try {
+      const service = await officeDao.getServices();
+      if (service.error) {
+          res.status(404).json(service);}
+      else{
+          res.json(service);
+      }
+      /*
+      } else if(counters.username == req.user.id){
+          res.json(counters);
+      } else {
+          res.status(401).send("Not authorized");
+      }*/
+  } catch (err) {
+    console.log(err)
+      res.status(500).end();
+  }
+});
+
 // POST /sessions 
 // login
 app.post('/api/sessions', function (req, res, next) {
@@ -195,44 +237,3 @@ app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
 });
 
-// GET counter informations
-app.get('/api/counters', async (req, res) => {
-  try {
-      const counters = await dao.getCounterInfo();
-      if (counters.error) {
-          res.status(404).json(counters);}
-      else{
-          res.json(counters);
-      }
-      /*
-      } else if(counters.username == req.user.id){
-          res.json(counters);
-      } else {
-          res.status(401).send("Not authorized");
-      }*/
-  } catch (err) {
-      res.status(500).end();
-  }
-});
-
-
-// GET services
-app.get('/api/services', async (req, res) => {
-  try {
-      const service = await dao.getServices();
-      if (service.error) {
-          res.status(404).json(service);}
-      else{
-          res.json(service);
-      }
-      /*
-      } else if(counters.username == req.user.id){
-          res.json(counters);
-      } else {
-          res.status(401).send("Not authorized");
-      }*/
-  } catch (err) {
-    console.log(err)
-      res.status(500).end();
-  }
-});

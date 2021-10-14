@@ -1,7 +1,7 @@
 const URL = "http://localhost:3000"
 
 async function loadServices() {
-    let myURL = URL + "/api/services";
+    let myURL = URL + "/api/services/all";
     const response = await fetch(myURL);
     if (response.ok) {
         const fetchedImages = await response.json();
