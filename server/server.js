@@ -152,7 +152,6 @@ app.post('/api/ticket/', [
 app.get('/api/counters', async (req, res) => {
   try {
       const counters = await officeDao.getCounterInfo();
-      console.log(counters)
       if (counters.error) {
           res.status(404).json(counters);}
       else{
@@ -189,6 +188,29 @@ app.get('/api/services', async (req, res) => {
     console.log(err)
       res.status(500).end();
   }
+});
+
+//POST counter informations
+app.post('/api/counters/', async (req, res) => {
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+  }
+  const counters = req.body;
+
+  try {
+    for (let i=0; i<counters.length; i++){
+      await officeDao.updateCounter(counters[i]);
+    }
+    res.status(200).end();
+    
+  
+  } catch (err) {
+    res.status(500).json({ error: `${err}.` });
+    return;
+  }
+
 });
 
 /*** User APIs ***/

@@ -3,6 +3,7 @@ import Col from 'react-bootstrap/Col'
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form"
 import Button from 'react-bootstrap/Button'
+import { Redirect } from 'react-router-dom';
 import { useState } from 'react';
 import { useEffect } from 'react';
 
@@ -11,26 +12,10 @@ function MyManager(props) {
 
     const [counter, setCounter] = useState();
     const [service, setService] = useState();
+    const [close, setClose] = useState(false);
+    const [postTrigger, setPostTriggger] = useState(undefined)
 
 
-
-    let handleResponse = (c, s) => (event) => {
-        
-        let tmp_counter = [...counter]
-        let index
-        for (let i=0; i<tmp_counter.length; i++){
-            if(tmp_counter[i].username===c.username){
-                index = i;
-            }
-        }
-        if (event.target.checked) {
-            tmp_counter[index].services[s.service] = 1; 
-        }
-        else {
-            tmp_counter[index].services[s.service] = 0; 
-        }
-        setCounter(tmp_counter)
-    }
 
     useEffect(() => {
         const fetchAll = async (x) => {
@@ -38,21 +23,19 @@ function MyManager(props) {
 
             let responseBody = await response.json();
 
-            responseBody.forEach(async (x)=>{x.services = await JSON.parse(x.services)});
+            responseBody.forEach(async (x) => { x.services = await JSON.parse(x.services) });
 
             let i = await responseBody
-            
+
             for (i = 0; i < responseBody.length; i++) {
                 let v = responseBody[i].services
                 responseBody[i].services = {}
-                for (let e=0; e<v.length; e++){
-                    responseBody[i].services[v[e]]=1;
+                for (let e = 0; e < v.length; e++) {
+                    responseBody[i].services[v[e]] = 1;
                 }
 
             }
             setCounter(responseBody)
-
-
         }
         fetchAll();
     }, []);
@@ -66,8 +49,64 @@ function MyManager(props) {
         fetchService();
     }, []);
 
+    let handleResponse = (c, s) => (event) => {
+        let tmp_counter = [...counter]
+        let index
+        for (let i = 0; i < tmp_counter.length; i++) {
+            if (tmp_counter[i].username === c.username) {
+                index = i;
+            }
+        }
+        if (event.target.checked) {
+            tmp_counter[index].services[s.service] = 1;
+        }
+        else {
+            tmp_counter[index].services[s.service] = 0;
+        }
+        setCounter(tmp_counter)
+    }
 
-    let cnt=-1;
+    useEffect(() => {
+        const postCounters = async () => {
+            const response = await fetch('/api/counters' , {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(postTrigger)
+            });
+            if (response.status === 500) {
+                console.log(response.err);
+            }
+        }
+        if(postTrigger){
+            for (let i=0; i<postTrigger.length; i++){
+
+                let buff=[]
+                
+                for (let elem in postTrigger[i].services){
+                    if(postTrigger[i].services[elem]!==0){
+                        if(elem===[]){
+                            elem = null
+                        }
+                        buff.push(elem)
+                    }
+                }
+                postTrigger[i].services = [...buff]
+
+                postTrigger[i].services = JSON.stringify(postTrigger[i].services)
+            }
+            console.log(postTrigger)
+            postCounters()
+            setClose(true)
+        }
+    },[postTrigger])
+
+    let cnt = -1;
+
+    if (close) {
+        return (<Redirect to="/"></Redirect>)
+    }
 
     return (
         <Container className="bg-dark min-height-100 align-items-center m-0 p-0 text-center" fluid>
@@ -84,14 +123,18 @@ function MyManager(props) {
                             </Col>
                             <Col sm={10} className="bg-light text-black p-2 text-center border border-dark">
                                 <Row>
-                                    {service ? service.map((y) => {return (<Col key={y.service}><Form.Check onChange={handleResponse(x, y)} checked={counter[cnt].services[y.service]===1?true:false} type="checkbox" label={y.service} /></Col>) }) : <></>}
+                                    {service ? service.map((y) => { return (<Col key={y.service}><Form.Check onChange={handleResponse(x, y)} checked={counter[cnt].services[y.service] === 1 ? true : false} type="checkbox" label={y.service} /></Col>) }) : <></>}
                                 </Row>
                             </Col>
 
                         </Row>)
                     }) : <></>
                 }
-                <Button className="mt-4 w-25" variant="success" size="lg">Confirm</Button>
+                <br />
+                <Row>
+                    <Col sm={6}><Button className="mt-4 w-50 p-3" variant="danger" size="lg" onClick={() => setClose(true)}>Abort</Button></Col>
+                    <Col sm={6}><Button className="mt-4 w-50 p-3" variant="success" size="lg" onClick={()=>(setPostTriggger(counter))}>Confirm</Button></Col>
+                </Row>
             </Container>
         </Container>
     )

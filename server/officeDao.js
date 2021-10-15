@@ -12,7 +12,7 @@ exports.getServicesAll = async () => {
                 reject(err);
                 return;
             }
-            if (rows !== undefined) {        
+            if (rows !== undefined) {
                 resolve(rows);
             }
             else {
@@ -63,32 +63,46 @@ exports.addTicket = async (ticket) => {
 // get all counters
 exports.getCounterInfo = () => {
     return new Promise((resolve, reject) => {
-      
-      const sql = 'SELECT * FROM management WHERE services!=?';
-      db.all(sql, ["null"] ,(err, rows) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        const tasks = rows.map((t) => ({ id: t.id, username: t.username, services: t.services }));
-        resolve(tasks);
-      });
+
+        const sql = 'SELECT * FROM management WHERE services!=?';
+        db.all(sql, ["null"], (err, rows) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            const tasks = rows.map((t) => ({ id: t.id, username: t.username, services: t.services }));
+            resolve(tasks);
+        });
     });
-  };
-  
-  
-  
-  // get all counters for a counter
-  exports.getServices = () => {
-    return new Promise((resolve, reject) => { 
-      const sql = 'SELECT * FROM services';
-      db.all(sql ,(err, rows) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        const tasks = rows.map((t) => ({ service: t.serviceName, extimatedTime: t.extimatedTime }));
-        resolve(tasks);
-      });
+};
+
+
+
+// get all counters for a counter
+exports.getServices = () => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM services';
+        db.all(sql, (err, rows) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            const tasks = rows.map((t) => ({ service: t.serviceName, extimatedTime: t.extimatedTime }));
+            resolve(tasks);
+        });
     });
-  };
+};
+
+exports.updateCounter = (c) => {
+    console.log(c)
+    return new Promise((resolve, reject) => {
+        const sql = "UPDATE management SET services = ? WHERE username = ?"
+        db.run(sql, [c.services ,c.username], function (err) {
+            if (err) {
+                reject(err);
+                return;
+            }
+            resolve();
+        });
+    })
+  }
