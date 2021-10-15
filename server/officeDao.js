@@ -87,7 +87,7 @@ exports.getCounterInfo = () => {
           reject(err);
           return;
         }
-        const tasks = rows.map((t) => ({ service: t.service, extimatedTime: t.extimatedTime }));
+        const tasks = rows.map((t) => ({ service: t.serviceName, extimatedTime: t.extimatedTime }));
         resolve(tasks);
       });
     });

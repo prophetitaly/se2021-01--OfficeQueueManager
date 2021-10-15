@@ -148,12 +148,11 @@ app.post('/api/ticket/', [
 
 });
 
-/*** User APIs ***/
-
 // GET counter informations
 app.get('/api/counters', async (req, res) => {
   try {
       const counters = await officeDao.getCounterInfo();
+      console.log(counters)
       if (counters.error) {
           res.status(404).json(counters);}
       else{
@@ -191,6 +190,10 @@ app.get('/api/services', async (req, res) => {
       res.status(500).end();
   }
 });
+
+/*** User APIs ***/
+
+
 
 // POST /sessions 
 // login
