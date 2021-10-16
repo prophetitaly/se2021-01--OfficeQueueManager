@@ -111,7 +111,7 @@ function MyManager(props) {
 
     return (
         <>
-            {!props.user || props.user !== "manager" && <Redirect to={"/"} />}
+            {(!props.user || props.user !== "manager") && <Redirect to={"/"} />}
             <Container className="bg-dark min-height-100 align-items-center m-0 p-0 text-center" fluid>
 
                 <Container className="p-0 m-0" fluid>

@@ -1,5 +1,20 @@
 # se2021-02--OfficeQueueManager
 
+## Installation Guide
+ In a window terminal
+ 
+ * git clone https://github.com/prophetitaly/se2021-02--OfficeQueueManager
+ * cd se2021-02--OfficeQueueManager
+ * cd server
+ * npm install
+ * nodemon server (nodemon is assumed to be already installed)
+
+ On another terminal window
+ * cd se2021-02--OfficeQueueManager
+ * cd client
+ * npm install
+ * npm start
+
 ## React Client Application Routes
 
 - Route `/`: main page with links to the monitor or login
@@ -86,3 +101,33 @@
     6
   }
   ```
+
+  - GET `/api/counters`
+  - Request parameter: None.
+  - Request body: None.
+  - Response: `200 OK` (success) or `401 Unauthenticated user`.
+  - Response body: counters of the office, with the relative available services.
+  ```
+  [
+    { id: 2, username: 'counter1', services: '["Shipping, Payment"]' },
+    { id: 3, username: 'counter2', services: '["Shipping"]' },
+    { id: 4, username: 'counter3', services: '[]' }
+  ]
+  ```
+
+    - POST `/api/ticket`
+  - Request parameter: None.
+  - Request body: An object representing the service requested (Content-Type: `application/json`).
+  ``` 
+  [
+    {
+      id: 2,
+      username: 'counter1',
+      services: '["Shipping","Payment","General"]'
+    },
+    { id: 3, username: 'counter2', services: '["Shipping"]' },
+    { id: 4, username: 'counter3', services: '[]' }
+  ]
+  ```
+  - Response: `200 OK` (success) or `401 Unauthenticated user`.
+   - Response body: None.

@@ -222,6 +222,7 @@ app.post('/api/counters/', isLoggedIn, (req, res, next) => {
   try {
     for (let i = 0; i < counters.length; i++) {
       await officeDao.updateCounter(counters[i]);
+      
     }
     res.status(200).end();
 
