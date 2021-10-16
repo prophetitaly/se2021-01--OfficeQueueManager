@@ -1,4 +1,11 @@
-### login
+### login 1
+
+POST http://localhost:3001/api/sessions/
+Content-Type: application/json
+
+{"username": "manager", "password": "password"}
+
+### login 2
 
 POST http://localhost:3001/api/sessions/
 Content-Type: application/json
