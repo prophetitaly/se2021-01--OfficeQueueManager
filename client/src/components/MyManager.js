@@ -110,37 +110,39 @@ function MyManager(props) {
     }
 
     return (
-        <Container className="bg-dark min-height-100 align-items-center m-0 p-0 text-center" fluid>
+        <>
+            {!props.user || props.user !== "manager" && <Redirect to={"/"} />}
+            <Container className="bg-dark min-height-100 align-items-center m-0 p-0 text-center" fluid>
 
-            <Container className="p-0 m-0" fluid>
-                <h1 className="text-white pt-5 pb-1 pr-0 pl-4">Welcome Mr. Manager!</h1>
-                <h5 className="text-white pt-0 pb-5 pr-0 pl-4">Here you can assign the services to each counter</h5>
-                {
-                    counter ? counter.map((x) => {
-                        cnt++;
-                        return (<Row key={x.id} className="mb-4 mr-5 ml-5 text-center">
-                            <Col sm={2} className="bg-primary text-black p-4 text-center border border-dark">
-                                <h5><b>{x.username}</b></h5>
-                            </Col>
-                            <Col sm={10} className="bg-light text-black p-4 text-center border border-dark">
-                                <Row>
-                                    {service ? service.map((y) => { return (<Col key={y.service}><Form.Check onChange={handleResponse(x, y)} checked={counter[cnt].services[y.service] === 1 ? true : false} type="checkbox" label={y.service} /></Col>) }) : <></>}
-                                </Row>
-                            </Col>
+                <Container className="p-0 m-0" fluid>
+                    <h1 className="text-white pt-5 pb-1 pr-0 pl-4">Welcome Mr. Manager!</h1>
+                    <h5 className="text-white pt-0 pb-5 pr-0 pl-4">Here you can assign the services to each counter</h5>
+                    {
+                        counter ? counter.map((x) => {
+                            cnt++;
+                            return (<Row key={x.id} className="mb-4 mr-5 ml-5 text-center">
+                                <Col sm={2} className="bg-primary text-black p-4 text-center border border-dark">
+                                    <h5><b>{x.username}</b></h5>
+                                </Col>
+                                <Col sm={10} className="bg-light text-black p-4 text-center border border-dark">
+                                    <Row>
+                                        {service ? service.map((y) => { return (<Col key={y.service}><Form.Check onChange={handleResponse(x, y)} checked={counter[cnt].services[y.service] === 1 ? true : false} type="checkbox" label={y.service} /></Col>) }) : <></>}
+                                    </Row>
+                                </Col>
 
-                        </Row>)
-                    }) : <></>
-                }
-                <br />
-                <Row>
-                    <Col sm={6}><Button className="mt-4 w-50 p-3" variant="danger" size="lg" onClick={() => setClose(true)}>Abort</Button></Col>
-                    <Col sm={6}><Button className="mt-4 w-50 p-3" variant="success" size="lg" onClick={() => (setPostTriggger(counter))}>Confirm</Button></Col>
-                </Row>
+                            </Row>)
+                        }) : <></>
+                    }
+                    <br />
+                    <Row>
+                        <Col sm={6}><Button className="mt-4 w-50 p-3" variant="danger" size="lg" onClick={() => setClose(true)}>Abort</Button></Col>
+                        <Col sm={6}><Button className="mt-4 w-50 p-3" variant="success" size="lg" onClick={() => (setPostTriggger(counter))}>Confirm</Button></Col>
+                    </Row>
+                </Container>
             </Container>
-            </Container>
-
-            )
+        </>
+    )
 
 }
 
-            export default MyManager;
+export default MyManager;
