@@ -22,7 +22,7 @@ function MyManager(props) {
             const response = await fetch('/api/counters');
 
             let responseBody = await response.json();
-            if(responseBody.error) return;
+            if (responseBody.error) return;
 
             responseBody.forEach(async (x) => { x.services = await JSON.parse(x.services) });
 
@@ -44,8 +44,8 @@ function MyManager(props) {
     useEffect(() => {
         const fetchService = async (x) => {
             const response = await fetch('/api/services');
-            const responseBody = await response.json();            
-            if(responseBody.error) return;
+            const responseBody = await response.json();
+            if (responseBody.error) return;
             setService(responseBody)
         }
         fetchService();
@@ -110,7 +110,6 @@ function MyManager(props) {
     }
 
     return (
-<<<<<<< HEAD
         <Container className="bg-dark min-height-100 align-items-center m-0 p-0 text-center" fluid>
 
             <Container className="p-0 m-0" fluid>
@@ -135,43 +134,13 @@ function MyManager(props) {
                 <br />
                 <Row>
                     <Col sm={6}><Button className="mt-4 w-50 p-3" variant="danger" size="lg" onClick={() => setClose(true)}>Abort</Button></Col>
-                    <Col sm={6}><Button className="mt-4 w-50 p-3" variant="success" size="lg" onClick={()=>(setPostTriggger(counter))}>Confirm</Button></Col>
+                    <Col sm={6}><Button className="mt-4 w-50 p-3" variant="success" size="lg" onClick={() => (setPostTriggger(counter))}>Confirm</Button></Col>
                 </Row>
-=======
-        <>
-            {!props.user || props.user !== "totem" && <Redirect to={"/"} />}
-            <Container className="bg-dark min-height-100 align-items-center m-0 p-0 text-center" fluid>
-
-                <Container className="p-0 m-0" fluid>
-                    <h1 className="text-white pt-5 pb-1 pr-0 pl-4">Welcome!</h1>
-                    <h5 className="text-white pt-0 pb-5 pr-0 pl-4">Here you can assign the services to each counter</h5>
-                    {
-                        counter ? counter.map((x) => {
-                            cnt++;
-                            return (<Row key={x.id} className="mb-4 mr-4 ml-4 p-2 text-center">
-                                <Col sm={2} className="bg-primary text-black p-2 text-center border border-dark">
-                                    {x.username}
-                                </Col>
-                                <Col sm={10} className="bg-light text-black p-2 text-center border border-dark">
-                                    <Row>
-                                        {service ? service.map((y) => { return (<Col key={y.service}><Form.Check onChange={handleResponse(x, y)} checked={counter[cnt].services[y.service] === 1 ? true : false} type="checkbox" label={y.service} /></Col>) }) : <></>}
-                                    </Row>
-                                </Col>
-
-                            </Row>)
-                        }) : <></>
-                    }
-                    <br />
-                    <Row>
-                        <Col sm={6}><Button className="mt-4 w-50 p-3" variant="danger" size="lg" onClick={() => setClose(true)}>Abort</Button></Col>
-                        <Col sm={6}><Button className="mt-4 w-50 p-3" variant="success" size="lg" onClick={() => (setPostTriggger(counter))}>Confirm</Button></Col>
-                    </Row>
-                </Container>
->>>>>>> 7fb012e796fc4b811a77e610c7771e91c96cedd4
             </Container>
-        </>
-    )
+            </Container>
+
+            )
 
 }
 
-export default MyManager;
+            export default MyManager;
