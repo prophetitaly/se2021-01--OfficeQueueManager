@@ -1,11 +1,11 @@
 const URL = "http://localhost:3000"
 
 async function loadServices() {
-    let myURL = URL + "/api/services/all";
+    let myURL = URL + "/api/services";
     const response = await fetch(myURL);
     if (response.ok) {
-        const fetchedImages = await response.json();
-        return fetchedImages;
+        const fetchedServices = await response.json();
+        return fetchedServices.map((s)=> s.service);
     } else return { 'error': 'Failed to load services from server' }
 }
 
