@@ -72,6 +72,7 @@ app.use(passport.session());
 
 /*** APIs ***/
 
+/* Deprecated
 Array.prototype.unique = function() {
   var a = this.concat();
   for(var i=0; i<a.length; ++i) {
@@ -84,7 +85,6 @@ Array.prototype.unique = function() {
   return a;
 };
 
-/* Deprecated
 // GET services
 app.get('/api/services/all', async (req, res) => {
   try {
@@ -123,7 +123,11 @@ app.get('/api/ticket', async (req, res) => {
 //new ticket
 app.post('/api/ticket/', [
   check('service').isString()
-], isLoggedIn, async (req, res) => {
+], isLoggedIn, (req, res, next) => {
+  if (req.user.username === "totem")
+    return next();
+  return res.status(401).json({ error: 'restricted access' });
+}, async (req, res) => {
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -151,49 +155,63 @@ app.post('/api/ticket/', [
 });
 
 // GET counter informations
-app.get('/api/counters', async (req, res) => {
+app.get('/api/counters', isLoggedIn, (req, res, next) => {
+  if (req.user.username === "manager")
+    return next();
+  return res.status(401).json({ error: 'restricted access' });
+}, async (req, res) => {
   try {
-      const counters = await officeDao.getCounterInfo();
-      if (counters.error) {
-          res.status(404).json(counters);}
-      else{
-          res.json(counters);
-      }
-      /*
-      } else if(counters.username == req.user.id){
-          res.json(counters);
-      } else {
-          res.status(401).send("Not authorized");
-      }*/
+    const counters = await officeDao.getCounterInfo();
+    if (counters.error) {
+      res.status(404).json(counters);
+    }
+    else {
+      res.json(counters);
+    }
+    /*
+    } else if(counters.username == req.user.id){
+        res.json(counters);
+    } else {
+        res.status(401).send("Not authorized");
+    }*/
   } catch (err) {
-      res.status(500).end();
+    res.status(500).end();
   }
 });
 
 
 // GET services
-app.get('/api/services', async (req, res) => {
+app.get('/api/services', isLoggedIn, (req, res, next) => {
+  if (req.user.username === "totem" || req.user.username === "manager")
+    return next();
+  return res.status(401).json({ error: 'restricted access' });
+}, async (req, res) => {
   try {
-      const service = await officeDao.getServices();
-      if (service.error) {
-          res.status(404).json(service);}
-      else{
-          res.json(service);
-      }
-      /*
-      } else if(counters.username == req.user.id){
-          res.json(counters);
-      } else {
-          res.status(401).send("Not authorized");
-      }*/
+    const service = await officeDao.getServices();
+    if (service.error) {
+      res.status(404).json(service);
+    }
+    else {
+      res.json(service);
+    }
+    /*
+    } else if(counters.username == req.user.id){
+        res.json(counters);
+    } else {
+        res.status(401).send("Not authorized");
+    }*/
   } catch (err) {
     console.log(err)
-      res.status(500).end();
+    res.status(500).end();
   }
 });
 
 //POST counter informations
-app.post('/api/counters/', async (req, res) => {
+app.post('/api/counters/', isLoggedIn, (req, res, next) => {
+  if (req.user.username === "manager")
+    return next();
+  return res.status(401).json({ error: 'restricted access' });
+}, async (req, res) => {
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -202,12 +220,12 @@ app.post('/api/counters/', async (req, res) => {
   const counters = req.body;
 
   try {
-    for (let i=0; i<counters.length; i++){
+    for (let i = 0; i < counters.length; i++) {
       await officeDao.updateCounter(counters[i]);
     }
     res.status(200).end();
-    
-  
+
+
   } catch (err) {
     res.status(500).json({ error: `${err}.` });
     return;
@@ -216,8 +234,6 @@ app.post('/api/counters/', async (req, res) => {
 });
 
 /*** User APIs ***/
-
-
 
 // POST /sessions 
 // login
