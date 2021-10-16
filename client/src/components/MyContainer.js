@@ -82,7 +82,7 @@ function MyContainer(props) {
                     render={() => {
                         return (
                             <>
-                               <MyManager/>
+                               <MyManager user={user}/>
                             </>
                         )
                     }}>

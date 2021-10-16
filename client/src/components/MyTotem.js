@@ -46,7 +46,7 @@ function MyTotem(props) {
 
     return (
         <>
-            {!props.user && <Redirect to={"/"} />}
+            {!props.user || props.user !== "totem" && <Redirect to={"/"} />}
             <Container className="bg-dark min-height-100 justify-content-center align-items-center " style={{ display: 'flex' }} fluid>
                 {services &&
                     <>
