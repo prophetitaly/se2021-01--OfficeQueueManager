@@ -84,6 +84,7 @@ Array.prototype.unique = function() {
   return a;
 };
 
+/* Deprecated
 // GET services
 app.get('/api/services/all', async (req, res) => {
   try {
@@ -103,6 +104,7 @@ app.get('/api/services/all', async (req, res) => {
     res.status(500).end();
   }
 });
+*/
 
 // GET next ticket number
 app.get('/api/ticket', async (req, res) => {

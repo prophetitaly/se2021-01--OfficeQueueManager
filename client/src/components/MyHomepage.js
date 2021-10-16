@@ -17,10 +17,10 @@ function MyHomepage(props) {
             <Container className="bg-dark min-height-100 justify-content-center align-items-center " style={{ display: 'flex' }} fluid>
                 <Row className="justify-content-center">
                     <Col md="auto" className="mx-2">
-                        <Button style={{ width: '125%', height: '125%' }} onClick={() => { setRedirectMonitor(true) }}>Monitor</Button>
+                        <Button className="" variant="info" size="lg" onClick={() => { setRedirectMonitor(true) }}>Monitor</Button>
                     </Col>
                     <Col md="auto" className="mx-2">
-                        <Button style={{ width: '125%', height: '125%' }} onClick={() => { setRedirectLogin(true) }}>Login</Button>
+                        <Button className="" variant="info" size="lg" onClick={() => { setRedirectLogin(true) }}>Login</Button>
                     </Col>
                 </Row>
             </Container>

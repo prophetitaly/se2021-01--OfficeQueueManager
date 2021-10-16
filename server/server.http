@@ -26,4 +26,4 @@ Content-Type: application/json
 
 ###get services
 
-GET http://localhost:3001/api/services/all
+GET http://localhost:3001/api/services

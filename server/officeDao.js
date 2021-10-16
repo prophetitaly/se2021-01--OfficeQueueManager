@@ -3,6 +3,7 @@
 const dayjs = require('dayjs');
 const db = require('./db');
 
+/* Deprecated
 //get services
 exports.getServicesAll = async () => {
     return new Promise((resolve, reject) => {
@@ -21,6 +22,7 @@ exports.getServicesAll = async () => {
         });
     });
 };
+*/
 
 //get next ticket number
 exports.getNextNumber = async () => {
