@@ -118,7 +118,7 @@ function MyManager(props) {
                         cnt++;
                         return (<Row key={x.id} className="mb-4 mr-5 ml-5 text-center">
                             <Col sm={2} className="bg-primary text-black p-4 text-center border border-dark">
-                                <b>{x.username}</b>
+                                <h5><b>{x.username}</b></h5>
                             </Col>
                             <Col sm={10} className="bg-light text-black p-4 text-center border border-dark">
                                 <Row>

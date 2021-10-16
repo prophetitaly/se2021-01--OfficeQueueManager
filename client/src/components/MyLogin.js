@@ -84,16 +84,16 @@ function MyLogin(props) {
 
     return (
         <>
-            <Container className="bg-dark min-height-100 justify-content-center" style={{ display: 'flex' }} fluid>
+            <Container className="bg-dark min-height-100 justify-content-center m-0 p-0" style={{ display: 'flex' }} fluid>
 
-            <Row className="w-100 mt-5 vheight-100">
+            <Row className="w-100 mt-5 vheight-100 m-0 p-0">
                 <Col sm={3}></Col>
-                <Col sm={6} className='col-5 below-nav'>
-                    <Container className=" p-5">
+                <Col sm={6} className='col-5 below-nav m-0 p-0'>
+                    <Container className=" p-5 m-0 b">
                     
-                        <Form className="p-3">
-                            <Form.Group controlId="formusername" className="mt-1">
-                                <Form.Label className="text-info"><h5>Username</h5></Form.Label>
+                        <Form className="pt-3 p-0 m-0">
+                            <Form.Group controlId="formusername" className="mt-1 w-100">
+                                <Form.Label className="text-info w-100"><h5>Username</h5></Form.Label>
                                 <Form.Control
                                     className="w-100 p-4"
                                     type="username"
@@ -132,7 +132,9 @@ function MyLogin(props) {
                                     {error}
                                 </div>
                             )}
-                            <Row className="pt-4 w-100 m-0">
+                            
+                        </Form>
+                        <Row className="pt-4 w-100 m-0">
                                 <Col sm={5} className="text-left m-0 p-0">
                                 
                             <Button
@@ -146,20 +148,21 @@ function MyLogin(props) {
                                 Back
                             </Button>
                                 </Col>
-                                <Col sm={2}></Col>
+                                <Col sm={2} className=""></Col>
                             <Col sm={5} className="text-right m-0 p-0">
                             <Button
                                 size = "lg"
                                 variant="success"
                                 type="submit"
                                 //className={errorMessagePassword ? "mt-1" : "mt-3 float-right mr-4"}
-                                className="w-100"
-                                onClick={(ev) => handleSubmit(ev)}>
+                                className="w-100 mr-5"
+                                onClick={(ev) => handleSubmit(ev)}
+                                >
+                
                                 Login
                             </Button>
                             </Col>
                             </Row>
-                        </Form>
                     </Container>
                     </Col>
                     <Col sm={3}></Col>
