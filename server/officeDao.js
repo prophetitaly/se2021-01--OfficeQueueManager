@@ -44,6 +44,51 @@ exports.getNextNumber = async () => {
     });
 };
 
+//get all tickets in queue for each service type
+exports.getTickets = async () => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT number, service FROM tickets WHERE date = ? AND counter IS NULL';
+        db.all(sql, [dayjs().format('YYYY-MM-DD')], function (err, rows) {
+            if (err) {
+                reject(err);
+                return;
+            }
+            if (rows !== undefined) {
+                const tickets = {};
+                rows.map(x => {
+                    if(!tickets[x.service]) tickets[x.service] = [];
+                    tickets[x.service].push(x.number);
+                });
+                resolve(tickets);
+            }
+            else {
+                resolve(1);
+            }
+        });
+    });
+};
+
+//get the current served tickets for each service type
+exports.getLastTickets = async () => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT service, counter, MAX(number) AS servingTicket FROM tickets WHERE date = ? AND counter IS NOT NULL GROUP BY service';
+        db.all(sql, [dayjs().format('YYYY-MM-DD')], function (err, rows) {
+            if (err) {
+                reject(err);
+                return;
+            }
+            if (rows !== undefined) {
+                const tickets = {};
+                rows.map((x, i) => tickets[x.service] = {counter: x.counter, ticket: x.servingTicket});
+                resolve(tickets);
+            }
+            else {
+                resolve(1);
+            }
+        });
+    });
+};
+
 // insert a new ticket
 exports.addTicket = async (ticket) => {
     try {
