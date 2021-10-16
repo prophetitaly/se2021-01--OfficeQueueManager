@@ -94,7 +94,6 @@ exports.getServices = () => {
 };
 
 exports.updateCounter = (c) => {
-    console.log(c)
     return new Promise((resolve, reject) => {
         const sql = "UPDATE management SET services = ? WHERE username = ?"
         db.run(sql, [c.services ,c.username], function (err) {

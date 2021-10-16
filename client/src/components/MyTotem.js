@@ -56,7 +56,7 @@ function MyTotem(props) {
                                     services.map((s) => {
                                         return (
                                             <Row className="my-2" key={s}>
-                                                <Button style={{ width: '125%', height: '125%' }} onClick={() => handleSubmit(s)}>{s}</Button>
+                                                <Button size="lg" className="p-5" onClick={() => handleSubmit(s)}>{s}</Button>
                                             </Row>
                                         )
                                     })
