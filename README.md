@@ -29,7 +29,7 @@
 - Table `management` - contains id username services hash
 - Table `tickets` - contains number date service counter
 - Table `services` - contains serviceName estimatedTime
-- 
+
 ## API Server
 
 - POST `/api/sessions`
@@ -131,3 +131,7 @@
   ```
   - Response: `200 OK` (success) or `401 Unauthenticated user`.
    - Response body: None.
+- GET `/api/nextCustomer/`
+  - Request parameter: counter_id
+  - Request body: None
+  - Response body: the ticket requested by the officer

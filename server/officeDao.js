@@ -123,7 +123,7 @@ exports.getLastTickets = async () => {
 
 exports.selectService = async(service) => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT min FROM services WHERE name = ?'
+        const sql = 'SELECT estimatedTime as min FROM services WHERE serviceName = ?'
         db.all(sql, [service], function(err, res) {
             if (err) {
                 reject(err);
