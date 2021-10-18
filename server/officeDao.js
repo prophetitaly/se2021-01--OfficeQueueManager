@@ -1,6 +1,7 @@
 " use strict ";
 
 const dayjs = require('dayjs');
+//const { resolve } = require('path/posix');
 const db = require('./db');
 
 //get services
@@ -41,6 +42,80 @@ exports.getNextNumber = async () => {
         });
     });
 };
+
+exports.getMinTicket = async(service) => {
+    return new Promise ((resolve, reject) => {
+        const sql = 'SELECT min(number) as ticket FROM tickets where service = ? AND counter IS NULL'
+        db.all(sql, [service], function(err, res) {
+            if(err) {
+                reject(err);
+                return;
+            }
+            else {
+                resolve(res[0].ticket)
+            }
+        })
+    })
+}
+
+exports.getTicketsOfService = async(service) => {
+    return new Promise((resolve, reject) => {
+        const sql_service = 'SELECT number FROM tickets WHERE service = ? AND counter IS NULL';
+        db.all(sql_service, [service], function(err, res) {
+            if (err) {
+                reject(err);
+                return;
+            }
+            else {
+                resolve(res);
+            }
+        })
+    })
+    
+}
+
+exports.selectService = async(service) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT min FROM services WHERE name = ?'
+        db.all(sql, [service], function(err, res) {
+            if (err) {
+                reject(err);
+                return;
+            }
+            else {
+                resolve(res[0].min)
+            }
+        })
+    })
+}
+
+exports.getServicesOfCounterX = async (id) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT services FROM management WHERE username = ?';
+        db.all(sql, [id], function(err, rows) {
+            if (err) {
+                reject(err);
+                return;
+            }
+            if(rows != undefined) {
+                resolve(rows[0].services);
+            }
+
+        })
+    })
+}
+
+exports.setTicketAsServed = async(id_ticket, id_counter) => {
+    return new Promise((resolve, reject) => {
+        const sql ='UPDATE tickets SET counter = ? WHERE number = ?'
+        db.run(sql, [id_counter, id_ticket], function (err) {
+            if(err) {
+                reject(err);
+                return;
+            }
+        })
+    })
+}
 
 // insert a new ticket
 exports.addTicket = async (ticket) => {

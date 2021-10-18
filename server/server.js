@@ -11,6 +11,7 @@ const LocalStrategy = require('passport-local').Strategy; // username and passwo
 const session = require('express-session'); // enable sessions
 const userDao = require('./userDao'); // module for accessing the users in the DB
 const dao = require('./db'); // module for accessing the users in the DB
+const url = require('url');
 
 
 /*** Set up Passport ***/
@@ -231,6 +232,81 @@ app.get('/api/sessions/current', (req, res) => {
   else
     res.status(401).json({ error: 'Unauthenticated user!' });
 });
+
+// GET next ticket
+app.get('/api/nextCustomer/', async(req, res) => {
+  // TODO: receive id
+  try{
+    var queryString = url.parse(req.url).query;  
+    const id = "counter"+queryString.replace("counter_id=", "")
+    var services = await officeDao.getServicesOfCounterX(id);
+    var list_of_services = [];
+    services = (services.replace("[", "").replace("]", "").replace(" ", "")).split(",");
+    for (var i=0; i<services.length; i++) {
+      var list = await officeDao.getTicketsOfService(services[i].replace(" ", "").slice(1, -1));
+      list_of_services.push(list);
+    }
+    // Now in list_of_services I have the lists of all the open tickets of each service
+    const lists_size = list_of_services.map((elem) => elem.length)
+    var max = 0;
+    console.log(lists_size)
+    lists_size.forEach((elem) => {
+      if (elem>max) max = elem
+    })
+    // I have no open ticket in the db
+    if (max < 1) {res.json({'ticket': 0}); return;}
+    var indici = []
+    var index = lists_size.indexOf(max);
+    // indexOf returns -1 if there is no elem equal to max
+    indici.push(index)
+    while(true) {
+      if ((index = lists_size.indexOf(max, index+1)) != -1) {
+        indici.push(index)
+      }
+      else{
+        break;
+      }
+    }
+    // I have a service with a queue longer than the others
+    if (indici.length == 1) {
+      console.log("only a service")
+      const ticket = await officeDao.getMinTicket(services[indici[0]].replace(" ", "").slice(1, -1))
+      officeDao.setTicketAsServed(ticket, id)
+      res.json({'ticket': ticket})
+      return;
+    }
+    console.log("More than one service")
+    var services_with_max = []
+    for (var i = 0; i < lists_size.length; i++) {
+      if (lists_size[i] == max) {
+        services_with_max.push(services[i].replace(" ", "").slice(1, -1))
+      }
+    }
+    console.log("services_with_max")
+    console.log(services_with_max)
+    var minimum = Number.MAX_SAFE_INTEGER
+    var selected_service;
+    
+    for (var i = 0; i <services_with_max.length; i++) {
+      var e = services_with_max[i];
+      const min = await officeDao.selectService(e)
+      if (min<minimum) {
+        minimum = min; selected_service = e;console.log(e);
+      }
+    }
+
+    const ticket = await officeDao.getMinTicket(selected_service)
+    officeDao.setTicketAsServed(ticket, id)
+    res.json({'ticket': ticket})
+    return;
+
+    
+  }
+  catch (err) {
+    console.log("Error api/nextCustomer");
+    console.log(err);
+  }
+})
 
 // activate the server
 app.listen(port, () => {

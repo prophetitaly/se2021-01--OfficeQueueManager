@@ -5,6 +5,7 @@ import MyLogin from "./MyLogin";
 import MyTotem from "./MyTotem";
 import API from "./API";
 import MyManager from "./MyManager"
+import MyOfficer from "./MyOfficer";
 
 function MyContainer(props) {
 
@@ -58,11 +59,11 @@ function MyContainer(props) {
                     }}>
                 </Route>
                 <Route
-                    path="/counter"
+                    path="/counter:id"
                     render={() => {
                         return (
                             <>
-
+                                <MyOfficer/>
                             </>
                         )
                     }}>

@@ -59,5 +59,16 @@ async function isLoggedIn() {
     }
 }
 
-const API = { loadServices, addTicket, login, logout, isLoggedIn };
+async function getNextTicket(id) {
+    try {
+        const response = await fetch(URL + "/api/nextCustomer?counter_id="+id);
+        if (response.ok) {
+            return response.json();
+        } else return { 'error': 'Error while taking the next customer' };
+    } catch (err) {
+        return { 'error': 'Error while taking the next customer' };
+    }
+}
+
+const API = { loadServices, addTicket, login, logout, isLoggedIn, getNextTicket };
 export default API;
