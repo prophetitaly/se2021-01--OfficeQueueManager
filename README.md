@@ -86,7 +86,7 @@
   ]
   ```
 
-  - POST `/api/ticket`
+- POST `/api/ticket`
   - Request parameter: None.
   - Request body: An object representing the service requested (Content-Type: `application/json`).
   ``` 
@@ -102,7 +102,7 @@
   }
   ```
 
-  - GET `/api/counters`
+- GET `/api/counters`
   - Request parameter: None.
   - Request body: None.
   - Response: `200 OK` (success) or `401 Unauthenticated user`.
@@ -115,7 +115,7 @@
   ]
   ```
 
-    - POST `/api/ticket`
+- POST `/api/ticket`
   - Request parameter: None.
   - Request body: An object representing the service requested (Content-Type: `application/json`).
   ``` 
@@ -131,7 +131,34 @@
   ```
   - Response: `200 OK` (success) or `401 Unauthenticated user`.
    - Response body: None.
+
+
 - GET `/api/nextCustomer/`
   - Request parameter: counter_id
   - Request body: None
   - Response body: the ticket requested by the officer
+
+
+- GET `/api/tickets/`
+  - Request parameter: None.
+  - Request body: None
+  - Response body: Object with services as keys and ticket numbers as values.
+  ``` 
+  {
+    "General": [1, 2, 5, 7],
+    "Payment": [3, 4, 8, 9, 10],
+    "Shipping": [6, 11]
+  }
+  ```
+  
+- GET `/api/tickets/now`
+  - Request parameter: None.
+  - Request body: None
+  - Response body: Object with services as keys and an object with counter and ticket number as values.
+  ``` 
+  {
+    "General": {"counter": 1, "ticket": 8},
+    "Payment": {"counter": 2, "ticket": 9},
+    "Shipping": {"counter": 3, "ticket": 10}
+  }
+  ```
