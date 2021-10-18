@@ -6,6 +6,7 @@ import MyTotem from "./MyTotem";
 import API from "./API";
 import MyManager from "./MyManager"
 import MyOfficer from "./MyOfficer";
+import MyMonitor from "./MyMonitor";
 
 function MyContainer(props) {
 
@@ -43,7 +44,7 @@ function MyContainer(props) {
                     render={() => {
                         return (
                             <>
-
+                                <MyMonitor />
                             </>
                         )
                     }}>
@@ -83,7 +84,7 @@ function MyContainer(props) {
                     render={() => {
                         return (
                             <>
-                               <MyManager/>
+                               <MyManager user={user}/>
                             </>
                         )
                     }}>

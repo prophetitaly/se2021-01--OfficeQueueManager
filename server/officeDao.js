@@ -4,6 +4,7 @@ const dayjs = require('dayjs');
 //const { resolve } = require('path/posix');
 const db = require('./db');
 
+/* Deprecated
 //get services
 exports.getServicesAll = async () => {
     return new Promise((resolve, reject) => {
@@ -13,7 +14,7 @@ exports.getServicesAll = async () => {
                 reject(err);
                 return;
             }
-            if (rows !== undefined) {        
+            if (rows !== undefined) {
                 resolve(rows);
             }
             else {
@@ -22,6 +23,7 @@ exports.getServicesAll = async () => {
         });
     });
 };
+*/
 
 //get next ticket number
 exports.getNextNumber = async () => {
@@ -58,6 +60,30 @@ exports.getMinTicket = async(service) => {
     })
 }
 
+//get all tickets in queue for each service type
+exports.getTickets = async () => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT number, service FROM tickets WHERE date = ? AND counter IS NULL';
+        db.all(sql, [dayjs().format('YYYY-MM-DD')], function (err, rows) {
+            if (err) {
+                reject(err);
+                return;
+            }
+            if (rows !== undefined) {
+                const tickets = {};
+                rows.map(x => {
+                    if(!tickets[x.service]) tickets[x.service] = [];
+                    tickets[x.service].push(x.number);
+                });
+                resolve(tickets);
+            }
+            else {
+                resolve(1);
+            }
+        });
+    });
+};
+
 exports.getTicketsOfService = async(service) => {
     return new Promise((resolve, reject) => {
         const sql_service = 'SELECT number FROM tickets WHERE service = ? AND counter IS NULL';
@@ -73,6 +99,27 @@ exports.getTicketsOfService = async(service) => {
     })
     
 }
+
+//get the current served tickets for each service type
+exports.getLastTickets = async () => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT service, counter, MAX(number) AS servingTicket FROM tickets WHERE date = ? AND counter IS NOT NULL GROUP BY service';
+        db.all(sql, [dayjs().format('YYYY-MM-DD')], function (err, rows) {
+            if (err) {
+                reject(err);
+                return;
+            }
+            if (rows !== undefined) {
+                const tickets = {};
+                rows.map((x, i) => tickets[x.service] = {counter: x.counter, ticket: x.servingTicket});
+                resolve(tickets);
+            }
+            else {
+                resolve(1);
+            }
+        });
+    });
+};
 
 exports.selectService = async(service) => {
     return new Promise((resolve, reject) => {
@@ -138,32 +185,45 @@ exports.addTicket = async (ticket) => {
 // get all counters
 exports.getCounterInfo = () => {
     return new Promise((resolve, reject) => {
-      
-      const sql = 'SELECT * FROM management WHERE services!=?';
-      db.all(sql, ["null"] ,(err, rows) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        const tasks = rows.map((t) => ({ id: t.id, username: t.username, services: t.services }));
-        resolve(tasks);
-      });
+
+        const sql = 'SELECT * FROM management WHERE services!=?';
+        db.all(sql, ["null"], (err, rows) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            const tasks = rows.map((t) => ({ id: t.id, username: t.username, services: t.services }));
+            resolve(tasks);
+        });
     });
-  };
-  
-  
-  
-  // get all counters for a counter
-  exports.getServices = () => {
-    return new Promise((resolve, reject) => { 
-      const sql = 'SELECT * FROM services';
-      db.all(sql ,(err, rows) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        const tasks = rows.map((t) => ({ service: t.service, extimatedTime: t.extimatedTime }));
-        resolve(tasks);
-      });
+};
+
+
+
+// get all counters for a counter
+exports.getServices = () => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM services';
+        db.all(sql, (err, rows) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            const tasks = rows.map((t) => ({ service: t.serviceName, extimatedTime: t.extimatedTime }));
+            resolve(tasks);
+        });
     });
-  };
+};
+
+exports.updateCounter = (c) => {
+    return new Promise((resolve, reject) => {
+        const sql = "UPDATE management SET services = ? WHERE username = ?"
+        db.run(sql, [c.services ,c.username], function (err) {
+            if (err) {
+                reject(err);
+                return;
+            }
+            resolve();
+        });
+    })
+  }

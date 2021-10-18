@@ -2,8 +2,11 @@ import { useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import API from "./API";
+import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Container from "react-bootstrap/Container";
+import { Redirect } from 'react-router-dom';
+
 
 function MyLogin(props) {
     const [username, setUsername] = useState("");
@@ -11,6 +14,7 @@ function MyLogin(props) {
     const [error, setError] = useState("");
     const [errorMessageUsername, setErrorMessageUsername] = useState("");
     const [errorMessagePassword, setErrorMessagePassword] = useState("");
+    const [goBack, setGoBack] = useState(false)
 
     const history = useHistory();
 
@@ -51,7 +55,7 @@ function MyLogin(props) {
                             //props.setUser(() => response);
                             //props.setLoggedIn(() => true);
                             //props.setFirstLogin(() => true);
-                            props.setUser(()=>username);
+                            props.setUser(() => username);
                             history.push("/" + username);
                         }
                     });
@@ -74,17 +78,24 @@ function MyLogin(props) {
         }
     }, [error]);
 
+    if (goBack) {
+        return (<Redirect to="/"></Redirect>)
+      }
+
     return (
         <>
-            <Container className="bg-dark min-height-100 justify-content-center" style={{ display: 'flex' }} fluid>
+            <Container className="bg-dark min-height-100 justify-content-center m-0 p-0" style={{ display: 'flex' }} fluid>
 
-                <Row className=" justify-content-center align-items-center">
-
-                    <div id="loginContainerDiv">
-                        <Form className="p-3">
-                            <Form.Group controlId="formusername" className="mt-1">
-                                <Form.Label className="text-info">Username</Form.Label>
+            <Row className="w-100 mt-5 vheight-100 m-0 p-0">
+                <Col sm={3}></Col>
+                <Col sm={6} className='col-5 below-nav m-0 p-0'>
+                    <Container className=" p-5 m-0 b">
+                    
+                        <Form className="pt-3 p-0 m-0">
+                            <Form.Group controlId="formusername" className="mt-1 w-100">
+                                <Form.Label className="text-info w-100"><h5>Username</h5></Form.Label>
                                 <Form.Control
+                                    className="w-100 p-4"
                                     type="username"
                                     placeholder="Enter username"
                                     required
@@ -99,9 +110,10 @@ function MyLogin(props) {
                             </Form.Group>
 
                             <Form.Group controlId="formPassword" className={errorMessageUsername ? "pt-1" : "pt-3"}>
-                                <Form.Label className="text-info">Password</Form.Label>
+                                <Form.Label className="text-info"><h5>Password</h5></Form.Label>
                                 <Form.Control
                                     type="password"
+                                    className="w-100 p-4"
                                     placeholder="Password"
                                     required
                                     isInvalid={errorMessagePassword}
@@ -120,16 +132,40 @@ function MyLogin(props) {
                                     {error}
                                 </div>
                             )}
+                            
+                        </Form>
+                        <Row className="pt-4 w-100 m-0">
+                                <Col sm={5} className="text-left m-0 p-0">
+                                
                             <Button
+                                size = "lg"
+                                variant="danger"
+                                type="submit"
+                                //className={errorMessagePassword ? "mt-1" : "mt-3 float-right mr-4"}
+                                className="w-100 m-0"
+                                onClick={() => setGoBack(true)}
+                            >
+                                Back
+                            </Button>
+                                </Col>
+                                <Col sm={2} className=""></Col>
+                            <Col sm={5} className="text-right m-0 p-0">
+                            <Button
+                                size = "lg"
                                 variant="success"
                                 type="submit"
-                                className={errorMessagePassword ? "mt-1" : "mt-3 float-right mr-4"}
+                                //className={errorMessagePassword ? "mt-1" : "mt-3 float-right mr-4"}
+                                className="w-100 mr-5"
                                 onClick={(ev) => handleSubmit(ev)}
-                            >
+                                >
+                
                                 Login
                             </Button>
-                        </Form>
-                    </div>
+                            </Col>
+                            </Row>
+                    </Container>
+                    </Col>
+                    <Col sm={3}></Col>
                 </Row>
             </Container>
         </>

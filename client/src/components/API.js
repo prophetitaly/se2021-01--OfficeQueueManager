@@ -1,12 +1,30 @@
 const URL = "http://localhost:3000"
 
 async function loadServices() {
-    let myURL = URL + "/api/services/all";
+    let myURL = URL + "/api/services";
     const response = await fetch(myURL);
     if (response.ok) {
-        const fetchedImages = await response.json();
-        return fetchedImages;
+        const fetchedServices = await response.json();
+        return fetchedServices.map((s)=> s.service);
     } else return { 'error': 'Failed to load services from server' }
+}
+
+async function loadQueues() {
+    let myURL = URL + "/api/tickets";
+    const response = await fetch(myURL);
+    if (response.ok) {
+        const fetchedQueues = await response.json();
+        return fetchedQueues;
+    } else return { 'error': 'Failed to load queues from server' }
+}
+
+async function loadServings() {
+    let myURL = URL + "/api/tickets/now";
+    const response = await fetch(myURL);
+    if (response.ok) {
+        const fetchedTickets = await response.json();
+        return fetchedTickets;
+    } else return { 'error': 'Failed to load last tickets from server' }
 }
 
 async function addTicket(ticket) {
@@ -70,5 +88,5 @@ async function getNextTicket(id) {
     }
 }
 
-const API = { loadServices, addTicket, login, logout, isLoggedIn, getNextTicket };
+const API = { loadServices, loadQueues, loadServings, addTicket, login, logout, isLoggedIn, getNextTicket };
 export default API;
