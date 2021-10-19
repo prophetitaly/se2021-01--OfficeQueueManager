@@ -133,19 +133,6 @@ app.get('/api/tickets', async (req, res) => {
   }
 });
 
-// GET current served tickets
-app.get('/api/tickets/now', async (req, res) => {
-  try {
-    const result = await officeDao.getLastTickets();
-    if (result.err)
-      res.status(404).json(result);
-    else
-      res.json(result);
-  } catch (err) {
-    res.status(500).end();
-  }
-});
-
 // POST /api/ticket/
 //new ticket
 app.post('/api/ticket/', [

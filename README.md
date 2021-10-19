@@ -150,15 +150,3 @@
     "Shipping": [6, 11]
   }
   ```
-  
-- GET `/api/tickets/now`
-  - Request parameter: None.
-  - Request body: None
-  - Response body: Object with services as keys and an object with counter and ticket number as values.
-  ``` 
-  {
-    "General": {"counter": 1, "ticket": 8},
-    "Payment": {"counter": 2, "ticket": 9},
-    "Shipping": {"counter": 3, "ticket": 10}
-  }
-  ```

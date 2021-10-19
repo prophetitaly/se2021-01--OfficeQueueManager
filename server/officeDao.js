@@ -67,7 +67,6 @@ exports.getTickets = async () => {
         db.all(sql, [dayjs().format('YYYY-MM-DD')], function (err, rows) {
             if (err) {
                 reject(err);
-                return;
             }
             if (rows !== undefined) {
                 const tickets = {};
@@ -75,10 +74,25 @@ exports.getTickets = async () => {
                     if(!tickets[x.service]) tickets[x.service] = [];
                     tickets[x.service].push(x.number);
                 });
-                resolve(tickets);
+                const sql = 'SELECT service, counter, MAX(number) AS servingTicket FROM tickets WHERE date = ? AND counter IS NOT NULL GROUP BY service';
+                db.all(sql, [dayjs().format('YYYY-MM-DD')], function (err, rows) {
+                    if (err) {
+                        reject(err);
+                    }
+                    if (rows !== undefined) {
+                        rows.map((x, i) => {
+                            if(!tickets[x.service]) tickets[x.service] = [];
+                            tickets[x.service].push(x.servingTicket+'@'+x.counter.slice(-1));
+                        });
+                        resolve(tickets);
+                    }
+                    else {
+                        resolve(tickets);
+                    }
+                });
             }
             else {
-                resolve(1);
+                resolve({});
             }
         });
     });
@@ -99,27 +113,6 @@ exports.getTicketsOfService = async(service) => {
     })
     
 }
-
-//get the current served tickets for each service type
-exports.getLastTickets = async () => {
-    return new Promise((resolve, reject) => {
-        const sql = 'SELECT service, counter, MAX(number) AS servingTicket FROM tickets WHERE date = ? AND counter IS NOT NULL GROUP BY service';
-        db.all(sql, [dayjs().format('YYYY-MM-DD')], function (err, rows) {
-            if (err) {
-                reject(err);
-                return;
-            }
-            if (rows !== undefined) {
-                const tickets = {};
-                rows.map((x, i) => tickets[x.service] = {counter: x.counter, ticket: x.servingTicket});
-                resolve(tickets);
-            }
-            else {
-                resolve(1);
-            }
-        });
-    });
-};
 
 exports.selectService = async(service) => {
     return new Promise((resolve, reject) => {

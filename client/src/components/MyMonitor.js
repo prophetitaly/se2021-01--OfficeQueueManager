@@ -8,8 +8,22 @@ function MyMonitor() {
   const [tickets, setTickets] = useState();
 
   const updateMonitor = () => {
-    API.loadQueues().then((q) => { if (q.error === undefined)  setQueues(q); });
-    API.loadServings().then((t) => { if (t.error === undefined) setTickets(t); });
+    API.loadQueues().then((q) => {
+      const t = {};
+      if (q.error === undefined) {
+        Object.keys(q).map(c => {
+          const last = q[c].slice(-1)[0];
+          if (last.length > 1) {
+            if (last.slice(-2, -1) === '@') {
+              t[c] = { counter: last.slice(-1), ticket: last.slice(0, -2) };
+              q[c].pop();
+            }
+          }
+        });
+        setQueues(q);
+        setTickets(t);
+      }
+    });
   };
 
   useEffect(() => {

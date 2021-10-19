@@ -18,15 +18,6 @@ async function loadQueues() {
     } else return { 'error': 'Failed to load queues from server' }
 }
 
-async function loadServings() {
-    let myURL = URL + "/api/tickets/now";
-    const response = await fetch(myURL);
-    if (response.ok) {
-        const fetchedTickets = await response.json();
-        return fetchedTickets;
-    } else return { 'error': 'Failed to load last tickets from server' }
-}
-
 async function addTicket(ticket) {
     const response = await fetch(URL + "/api/ticket/",
         {
@@ -88,5 +79,5 @@ async function getNextTicket(id) {
     }
 }
 
-const API = { loadServices, loadQueues, loadServings, addTicket, login, logout, isLoggedIn, getNextTicket };
+const API = { loadServices, loadQueues, addTicket, login, logout, isLoggedIn, getNextTicket };
 export default API;
