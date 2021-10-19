@@ -29,6 +29,12 @@ function MyTotem(props) {
         }
     }, [reqUpdate, props.loggedIn]);
 
+    const toHide = () => {
+        setTicketShow(false);
+        setTicketNumber(undefined);
+        setTicketService(undefined);
+    }
+
     const handleSubmit = async (s) => {
         const ticket = {
             service: s
@@ -40,6 +46,7 @@ function MyTotem(props) {
                 setTicketNumber(() => response);
                 setTicketService(() => s);
                 setTicketShow(() => true);
+                setTimeout(() => toHide(), 5000);
             }
         });
     };
@@ -48,14 +55,14 @@ function MyTotem(props) {
         <>
             {!props.user || (props.user !== "totem" && <Redirect to={"/"} />)}
             <Container className="bg-dark min-height-100 justify-content-center align-items-center text-center m-0 p-0" fluid>
-            <h1 className="text-white pt-5 pb-1 pr-0 pl-4">Welcome!</h1>
-            <h5 className="text-white pt-0 pb-5 pr-0 pl-4">Please, select one of the services and read your ticket number</h5>
-                
+                <h1 className="text-white pt-5 pb-1 pr-0 pl-4">Welcome!</h1>
+                <h5 className="text-white pt-0 pb-5 pr-0 pl-4">Please, select one of the services and read your ticket number</h5>
+
                 {services &&
                     <>
                         <Row className="justify-content-center w-100 m-0 p-0">
                             <Col sm={4} className="m-0 p-0"></Col>
-                            <Col sm={4}  className="m-0 p-0">
+                            <Col sm={4} className="m-0 p-0">
                                 {
                                     services.map((s) => {
                                         return (
@@ -68,7 +75,7 @@ function MyTotem(props) {
                             </Col>
                             <Col sm={4} className="m-0 p-0"></Col>
                         </Row>
-                        <MyModal ticketNumber={ticketNumber} ticketService={ticketService} show={ticketShow} onHide={() => { setTicketShow(false); setTicketNumber(undefined); setTicketService(undefined) }} />
+                        <MyModal ticketNumber={ticketNumber} ticketService={ticketService} show={ticketShow} onHide={() => toHide} />
                     </>
                 }
             </Container>
@@ -79,25 +86,26 @@ function MyTotem(props) {
 function MyModal(props) {
 
     useEffect(() => {
-        setTimeout(() => props.onHide(), 8000);
+
     })
     return (
         <Modal
             {...props}
             size="auto"
             aria-labelledby="contained-modal-title-vcenter"
+            backdrop="static"
             centered
         >
             <Modal.Body>
-                <Row className="justify-content-center">            
-                        <h2 className="text-info">Ticket Information</h2>
+                <Row className="justify-content-center">
+                    <h2 className="text-info">Ticket Information</h2>
                 </Row>
-                <Row className="justify-content-left ml-2 mt-2">            
-                        <h4>Ticket number: {props.ticketNumber}</h4>
+                <Row className="justify-content-left ml-2 mt-2">
+                    <h4>Ticket number: {props.ticketNumber}</h4>
 
                 </Row>
-                <Row className="justify-content-left ml-2">            
-                        <h4>Ticket service: {props.ticketService}</h4>
+                <Row className="justify-content-left ml-2">
+                    <h4>Ticket service: {props.ticketService}</h4>
                 </Row>
             </Modal.Body>
         </Modal>

@@ -11,7 +11,7 @@ function MyMonitor() {
     API.loadQueues().then((q) => {
       const t = {};
       if (q.error === undefined) {
-        Object.keys(q).map(c => {
+        Object.keys(q).forEach(c => {
           const last = q[c].slice(-1)[0];
           if (last.length > 1) {
             if (last.slice(-2, -1) === '@') {
