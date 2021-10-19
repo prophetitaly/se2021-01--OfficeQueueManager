@@ -64,7 +64,7 @@ function MyContainer(props) {
                     render={() => {
                         return (
                             <>
-                                <MyOfficer/>
+                                <MyOfficer user={user}/>
                             </>
                         )
                     }}>

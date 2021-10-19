@@ -12,6 +12,13 @@ Content-Type: application/json
 
 {"username": "totem", "password": "totem"}
 
+### login 3
+
+POST http://localhost:3001/api/sessions/
+Content-Type: application/json
+
+{"username": "counter2", "password": "counter2"}
+
 ### logout
 
 DELETE  http://localhost:3001/api/sessions/current
@@ -34,3 +41,7 @@ Content-Type: application/json
 ###get services
 
 GET http://localhost:3001/api/services
+
+###get services
+
+GET http://localhost:3001/api/nextCustomer?counter_id=3
