@@ -73,40 +73,6 @@ app.use(passport.session());
 
 /*** APIs ***/
 
-/* Deprecated
-Array.prototype.unique = function() {
-  var a = this.concat();
-  for(var i=0; i<a.length; ++i) {
-      for(var j=i+1; j<a.length; ++j) {
-          if(a[i] === a[j])
-              a.splice(j--, 1);
-      }
-  }
-
-  return a;
-};
-
-// GET services
-app.get('/api/services/all', async (req, res) => {
-  try {
-    const result = await officeDao.getServicesAll();  
-    if (result.err)
-      res.status(404).json(result);
-    else {
-      const list = [];
-      result.forEach(async (r) => {
-        const s = await JSON.parse(r.services);
-        if(s != null) list.push(...s);
-      });
-      const uniqueList = await list;
-      res.json(uniqueList.unique());
-    }
-  } catch (err) {
-    res.status(500).end();
-  }
-});
-*/
-
 // GET next ticket number
 app.get('/api/ticket', async (req, res) => {
   try {
