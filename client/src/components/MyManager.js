@@ -88,7 +88,7 @@ function MyManager(props) {
 
                 for (let elem in postTrigger[i].services) {
                     if (postTrigger[i].services[elem] !== 0) {
-                        if (elem === []) {
+                        if (elem == []) {
                             elem = null
                         }
                         buff.push(elem)
