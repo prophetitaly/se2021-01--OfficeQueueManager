@@ -1,0 +1,19 @@
+version: "3.9"
+services:
+  server:
+    build: ./server
+    ports:
+      - "3001:3001"
+    networks:
+      - webappnetwork
+  client:
+    build: ./client
+    ports:
+      - "3000:3000"
+    links:
+      - "server:se"
+    networks:
+      - webappnetwork
+networks:
+    webappnetwork:
+        driver: bridge
