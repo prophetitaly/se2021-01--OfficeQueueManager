@@ -1,1 +1,0 @@
-docker image build -t s290168/se2-p02-server:first .
